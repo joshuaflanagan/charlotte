@@ -109,13 +109,13 @@
           <span data-bind="text: $data"></span></li>
       </ul>
       <input data-bind="value: pollingFrequency" />
+      <br />
       <a href="#" data-bind="click: hideConfig">Close</a>
     </div>
   </body>
 
 
   <script>
-    // holds config data that doesn't change with each refresh from server
     var Build = function(baseUrl){
       this.baseUrl = baseUrl;
       this.url = baseUrl + "api/json?tree=description,lastBuild[building,timestamp,estimatedDuration],healthReport[description,url,score],lastSuccessfulBuild[timestamp],changeSet[items[id,comment]],lastCompletedBuild[result,culprits[fullName]]&jsonp=?"
