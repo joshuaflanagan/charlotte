@@ -102,12 +102,13 @@
       </footer>
     </div>
     <div id="configScreen" data-bind="visible: configVisible">
-      DO THE CONFIG
       <input data-bind="value: urlToAdd" />
       <button data-bind="click: addUrl">Add Job Url</button>
       <ul data-bind="foreach: jobUrls">
-        <li><span data-bind="text: $data"></span><a href="#" data-bind="click: $root.removeUrl">remove</a></li>
+        <li><a href="#" data-bind="click: $root.removeUrl">remove</a>
+          <span data-bind="text: $data"></span></li>
       </ul>
+      <input data-bind="value: pollingFrequency" />
       <a href="#" data-bind="click: hideConfig">Close</a>
     </div>
   </body>
@@ -127,9 +128,10 @@
       this.pollingError = ko.observable(false);
     }
 
-    function CharlotteViewModel(urls) {
+    function CharlotteViewModel(urls, pollingFrequency) {
       var self = this;
       this.jobUrls = ko.observableArray(urls);
+      this.pollingFrequency = ko.observable(pollingFrequency);
       this.builds = ko.computed(function() { return $.map(self.jobUrls(), function(url) { return new Build(url) }) });
       this.configVisible = ko.observable(!urls.length);
       this.lastUpdate = ko.computed(function(){
@@ -143,6 +145,7 @@
       this.showConfig = function(){ self.configVisible(true); }
       this.hideConfig = function(){ 
         window.localStorage["jobUrls"] = ko.toJSON(self.jobUrls());
+        window.localStorage["pollingFrequency"] = ko.toJSON(self.pollingFrequency());
         window.location.reload(false);
       }
 
@@ -187,17 +190,20 @@
         build.buildEstimate(new Date(data.lastBuild.timestamp + data.lastBuild.estimatedDuration));
         build.status(data.lastCompletedBuild.result);
         build.lastChecked(new Date());
-        setTimeout(function(){ self.retrieveBuildState(build) }, 5000);
+        console.log("check " + build.name() + " again in " + self.pollingFrequency() + " seconds");
+        setTimeout(function(){ self.retrieveBuildState(build) }, self.pollingFrequency() * 1000);
       };
+
+      this.initAll();
     }
 
     var savedUrls = JSON.parse(window.localStorage["jobUrls"] || '[]');
+    var pollingFrequency = JSON.parse(window.localStorage["pollingFrequency"] || '30');
 
-    var vm = new CharlotteViewModel(savedUrls);
+    var vm = new CharlotteViewModel(savedUrls, pollingFrequency);
 
 
     ko.applyBindings(vm);
-    setTimeout(vm.initAll, 1000);
 
   </script>
 </html>
