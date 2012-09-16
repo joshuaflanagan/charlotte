@@ -1,0 +1,69 @@
+body  {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  font-family: verdana, arial, sans-serif;
+}
+div, h1, h2, h3, footer {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+h2 {
+  font-size: 3em;
+}
+
+#buildsScreen {
+  height: 100%;
+  width: 100%;
+  display: -moz-box;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+}
+
+#configScreen {
+  left: 0;
+  top: 0;
+}
+
+footer {
+  bottom: 0;
+  color: white;
+  background-color: black;
+  min-height: 40px;
+}
+
+
+.build-display {
+  left: 0;
+  right: 0;
+  display: -moz-box;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-box-flex: 1;
+  background-color: pink;
+}
+
+.build {
+  -webkit-box-flex: 1;
+  border-top: solid thin black;
+} 
+
+.good {
+  background-color: green;
+}
+
+.bad {
+  background-color: red;
+}
+
+.building {
+  border: solid thick white;
+  color: orange;
+}
