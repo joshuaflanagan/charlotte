@@ -71,6 +71,7 @@
 
       .building {
         border: solid thick white;
+        color: orange;
       }
     </style>
   </head>
@@ -99,6 +100,7 @@
       <footer>
         <a href="#" data-bind="click: showConfig">configure</a>
         <span data-bind="text: lastUpdate().toLocaleTimeString()"></span>
+        <span data-bind="text: currentTime().toLocaleTimeString()"></span>
       </footer>
     </div>
     <div id="configScreen" data-bind="visible: configVisible">
@@ -133,6 +135,7 @@
       this.jobUrls = ko.observableArray(urls);
       this.pollingFrequency = ko.observable(pollingFrequency);
       this.builds = ko.computed(function() { return $.map(self.jobUrls(), function(url) { return new Build(url) }) });
+      this.currentTime = ko.observable(new Date());
       this.configVisible = ko.observable(!urls.length);
       this.lastUpdate = ko.computed(function(){
         var checkTimes = $.map(self.builds(), function(build) { 
@@ -164,6 +167,12 @@
         ko.utils.arrayForEach(self.builds(), function(build){
           self.retrieveBuildState(build);
         });
+        self.updateTime();
+      }
+
+      this.updateTime = function() {
+        self.currentTime(new Date());
+        setTimeout(function(){ self.updateTime() }, 1 * 1000);
       }
 
       this.retrieveBuildState = function(build){
