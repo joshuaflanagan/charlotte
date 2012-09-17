@@ -5,8 +5,8 @@ var Build = function(baseUrl){
   this.status = ko.observable("UNKNOWN");
   this.lastChecked = ko.observable();
   this.building = ko.observable(false);
-  this.buildStarted = ko.observable();
-  this.buildEstimate = ko.observable();
+  this.buildStarted = ko.observable(new Date(0));
+  this.buildEstimate = ko.observable(new Date(0));
   this.pollingError = ko.observable(false);
 }
 
@@ -14,15 +14,15 @@ function CharlotteViewModel(urls, pollingFrequency) {
   var self = this;
   this.jobUrls = ko.observableArray(urls);
   this.pollingFrequency = ko.observable(pollingFrequency);
-  this.builds = ko.computed(function() { return $.map(self.jobUrls(), function(url) { return new Build(url) }) });
-  this.currentTime = ko.observable(new Date());
+  this.builds = ko.observableArray($.map(self.jobUrls(), function(url) { return new Build(url) }));
+  this.currentTime = ko.observable(new Date().formatted());
   this.configVisible = ko.observable(!urls.length);
   this.lastUpdate = ko.computed(function(){
     var checkTimes = $.map(self.builds(), function(build) { 
       return build.lastChecked() 
     });
     var latest = Math.max.apply(Math, checkTimes);
-    return latest > 0 ? new Date(latest) : new Date(0);
+    return latest > 0 ? new Date(latest).formatted() : new Date(0);
   });
 
   this.showConfig = function(){ self.configVisible(true); }
@@ -51,7 +51,7 @@ function CharlotteViewModel(urls, pollingFrequency) {
   }
 
   this.updateTime = function() {
-    self.currentTime(new Date());
+    self.currentTime(new Date().formatted());
     setTimeout(function(){ self.updateTime() }, 1 * 1000);
   }
 
@@ -85,3 +85,23 @@ function CharlotteViewModel(urls, pollingFrequency) {
 
   this.initAll();
 }
+
+Date.prototype.sameDay = function(other){
+  if (other.getYear() != this.getYear()) return false;
+  if (other.getMonth() != this.getMonth()) return false;
+  if (other.getDate() != this.getDate()) return false;
+  return true;
+}
+Date.prototype.formatted = function(alwaysShowDate){
+  function pad(n){return n<10 ? '0'+n : n}
+  var hours = this.getHours();
+  var ampm = "am";
+  if (hours > 12) {
+    hours = hours - 12;
+    ampm = "pm"
+  }
+  alwaysShowDate = typeof alwaysShowDate !== 'undefined' ? alwaysShowDate : false;
+  var datePart = (alwaysShowDate || this.sameDay(new Date())) ? '' : ' on ' + (this.getMonth() + 1) + '/' + pad(this.getDate());
+  return hours + ':' + pad(this.getMinutes()) + ':' + pad(this.getSeconds()) + ' ' + ampm + datePart;
+}
+

@@ -8,30 +8,29 @@
   </head>
   <body>
     <div id="buildsScreen" data-bind="visible: !configVisible()">
-      <div data-bind="foreach: builds" class="build-display">
-        <div data-bind="css: {
+      <div class="build-display" data-bind="foreach: builds">
+        <div class="build" data-bind="css: {
           good: status() == 'SUCCESS',
           bad: status() == 'FAILURE',
           building: building()
-          }" class="build">
+          }">
           <h2 data-bind="text: name"></h2>
           <!-- <span data-bind="text: lastChecked"></span>-->
           <div data-bind="visible: pollingError()">
             <h3>Error connecting to the CI server</h3>
           </div>
-          <div data-bind="if: building()">
-            <h3>** BUILDING **</h3>
-            Started: <span data-bind="text: buildStarted()"></span>
+          <div class="build-progress" data-bind="visible: building()">
+            Build started: <span data-bind="text: buildStarted().formatted()"></span>
             <br />
-            Expected finish: <span data-bind="text: buildEstimate()"></span></h3>
+            Expected finish: <span data-bind="text: buildEstimate().formatted()"></span></h3>
           </div>
         </div>
       </div>
 
       <footer>
-        <a href="#" data-bind="click: showConfig">configure</a>
-        <span data-bind="text: lastUpdate().toLocaleTimeString()"></span>
-        <span data-bind="text: currentTime().toLocaleTimeString()"></span>
+      <div><a href="#" data-bind="click: showConfig">configure</a></div>
+      <div>State updated: <span data-bind="text: lastUpdate"></span></div>
+      <div><span data-bind="text: currentTime"></span></div>
       </footer>
     </div>
     <div id="configScreen" data-bind="visible: configVisible">
@@ -54,6 +53,5 @@
 
     var vm = new CharlotteViewModel(savedUrls, pollingFrequency);
     ko.applyBindings(vm);
-
   </script>
 </html>
