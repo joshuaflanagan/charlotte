@@ -26,7 +26,9 @@ function CharlotteViewModel(urls, pollingFrequency) {
   });
 
   this.showConfig = function(){ self.configVisible(true); }
-  this.hideConfig = function(){
+  this.hideConfig = function(){ self.configVisible(false); }
+
+  this.updateConfig = function(){
     window.localStorage["jobUrls"] = ko.toJSON(self.jobUrls());
     window.localStorage["pollingFrequency"] = ko.toJSON(self.pollingFrequency());
     window.location.reload(false);

@@ -40,6 +40,7 @@
     </div>
 
     <div class="configScreen" data-bind="visible: configVisible">
+      <a class="configClose" href="#" data-bind="click: hideConfig">&times; Close</a>
       <form id="configForm">
         <input placeholder="Job Url..." data-bind="value: urlToAdd" />
         <button data-bind="click: addUrl">Add Job Url</button>
@@ -50,7 +51,7 @@
           </li>
         </ul>
         <input placeholder="Polling Frequeny" data-bind="value: pollingFrequency" />
-        <a href="#" data-bind="click: hideConfig">Start</a>
+        <a href="#" data-bind="click: updateConfig">Start</a>
       </form>
     </div>
 
