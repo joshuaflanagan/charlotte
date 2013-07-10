@@ -20,7 +20,6 @@ div, h1, h2, h3, footer {
 }
 
 h1, h2, h3 {
-  text-align: center;
 }
 
 h2 {
@@ -100,25 +99,36 @@ footer a {
   -webkit-box-orient: vertical;
   -moz-box-orient: vertical;
   -webkit-box-flex: 1;
-  background-color: pink;
+  background-color: #fff;
 }
 
 .build {
   -webkit-box-flex: 1;
-  border-top: solid thin black;
+  margin: 10px;
+  margin-bottom: 0;
+  padding: 20px;
+}
+
+.build:last-child {
+  margin-bottom: 10px;
+}
+
+.build h2, .build h3 {
+  color: #fff;
+  text-align: left;
 }
 
 .build h2 {
+  line-height: 80px;
   -webkit-box-flex: 1;
-  line-height: 140px;
 }
 
 .good {
-  background-color: green;
+  background-color: #05A31A;
 }
 
 .bad {
-  background-color: red;
+  background-color: #e30b0b;
 }
 
 .building {
@@ -128,15 +138,17 @@ footer a {
   -webkit-animation-timing-function: linear;
 }
 
-.building h2 {
-  color: white;
-  -webkit-text-stroke: 2px black;
-  -webkit-text-fill-color: yellow;
+.building h2, .building h3 {
+  color: #7D7A0E;
 }
 
 .build-progress {
-  background-color: #ccc;
+  background-color: rgba(77, 74, 10, 0.1);
+  margin: 10px 0;
+  padding: 10px;
   width: 300px;
-  margin-left: 50px;
-  padding: 4px;
+}
+
+.build-progress p {
+  line-height: 18px;
 }
