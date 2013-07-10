@@ -14,6 +14,11 @@
           building: building()
           }">
           <h2 data-bind="text: name"></h2>
+          <div class="description-and-link">
+            <h3>
+              <span data-bind="text: description"></span>
+            </h3>
+          </div>
           <!-- <span data-bind="text: lastChecked"></span>-->
           <div data-bind="visible: pollingError()">
             <h3>Error connecting to the CI server</h3>
@@ -40,6 +45,7 @@
     </div>
 
     <div class="configScreen" data-bind="visible: configVisible">
+      <a class="configClose" href="#" data-bind="click: hideConfig">&times; Close</a>
       <form id="configForm">
         <input placeholder="Job Url..." data-bind="value: urlToAdd" />
         <button data-bind="click: addUrl">Add Job Url</button>
@@ -50,7 +56,7 @@
           </li>
         </ul>
         <input placeholder="Polling Frequeny" data-bind="value: pollingFrequency" />
-        <a href="#" data-bind="click: hideConfig">Start</a>
+        <a href="#" data-bind="click: updateConfig">Start</a>
       </form>
     </div>
 
