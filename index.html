@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
@@ -23,10 +21,15 @@
           <div data-bind="visible: pollingError()">
             <h3>Error connecting to the CI server</h3>
           </div>
-          <div class="build-progress" data-bind="visible: building()">
-            Build started: <span data-bind="text: buildStarted().formatted()"></span>
-            <br />
-            Expected finish: <span data-bind="text: buildEstimate().formatted()"></span></h3>
+          <div class="build-progress" style="display: none;" data-bind="visible: building()">
+            <p>
+              Build started:
+              <span data-bind="text: buildStarted().formatted()"></span>
+            </p>
+            <p>
+              Expected finish:
+              <span data-bind="text: buildEstimate().formatted()"></span>
+            </p>
           </div>
         </div>
       </div>
@@ -44,7 +47,7 @@
       </footer>
     </div>
 
-    <div class="configScreen" data-bind="visible: configVisible">
+    <div class="configScreen" style="display: none;" data-bind="visible: configVisible">
       <a class="configClose" href="#" data-bind="click: hideConfig">&times; Close</a>
       <form id="configForm">
         <input placeholder="Job Url..." data-bind="value: urlToAdd" />
@@ -62,6 +65,8 @@
 
   </body>
 
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
   <script src="charlotte.js"></script>
   <script>
     var savedUrls = JSON.parse(window.localStorage["jobUrls"] || '[]');
