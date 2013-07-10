@@ -1,3 +1,14 @@
+var humanize = function(string) {
+    string = $.trim(string);
+    var terms = string.split('_');
+
+    for(var i=0; i < terms.length; i++){
+        terms[i] = terms[i].charAt(0).toUpperCase() + terms[i].slice(1);
+    }
+
+    return terms.join(' ');
+}
+
 var Build = function(baseUrl){
   this.baseUrl = baseUrl;
   this.url = baseUrl + "api/json?tree=name,description,lastBuild[building,timestamp,estimatedDuration],healthReport[description,url,score],lastSuccessfulBuild[timestamp],changeSet[items[id,comment]],lastCompletedBuild[result,culprits[fullName]]&jsonp=?"
@@ -76,7 +87,7 @@ function CharlotteViewModel(urls, pollingFrequency) {
   this.updateBuild = function(build, data){
     console.log("data received for " + build.url);
     build.pollingError(false);
-    build.name(data.name);
+    build.name(humanize(data.name));
     build.description(data.description);
     build.building(data.lastBuild.building);
     build.buildStarted(new Date(data.lastBuild.timestamp));
