@@ -18,22 +18,22 @@ function CharlotteViewModel(urls, pollingFrequency) {
   this.currentTime = ko.observable(new Date().formatted());
   this.configVisible = ko.observable(!urls.length);
   this.lastUpdate = ko.computed(function(){
-    var checkTimes = $.map(self.builds(), function(build) { 
-      return build.lastChecked() 
+    var checkTimes = $.map(self.builds(), function(build) {
+      return build.lastChecked()
     });
     var latest = Math.max.apply(Math, checkTimes);
     return latest > 0 ? new Date(latest).formatted() : new Date(0);
   });
 
   this.showConfig = function(){ self.configVisible(true); }
-  this.hideConfig = function(){ 
+  this.hideConfig = function(){
     window.localStorage["jobUrls"] = ko.toJSON(self.jobUrls());
     window.localStorage["pollingFrequency"] = ko.toJSON(self.pollingFrequency());
     window.location.reload(false);
   }
 
   this.urlToAdd = ko.observable();
-  this.addUrl = function() { 
+  this.addUrl = function() {
     console.log("adding url");
     self.jobUrls.push(self.urlToAdd())
     self.urlToAdd(null);
@@ -62,7 +62,7 @@ function CharlotteViewModel(urls, pollingFrequency) {
       data: null,
       //timeout: this.timeout,
       success: function(data) { self.updateBuild(build, data) },
-      error: function(request,status,errorThrown) { 
+      error: function(request,status,errorThrown) {
         console.log("error while checking " + build.url);
         build.pollingError(true);
       },
