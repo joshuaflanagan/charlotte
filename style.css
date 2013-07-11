@@ -84,6 +84,44 @@ footer a {
   text-transform: capitalize;
 }
 
+.addBuild {
+  color: #777;
+  background: #dedede;
+  height: 60px;
+  padding: 0; margin: 0;
+}
+
+.addBuild input[type=text] {
+  font-size: 1em;
+  border-radius: 2px;
+  border: none;
+  margin: 15px 0 15px 10px;
+  padding: 5px;
+}
+
+.addBuild .jobUrl, .addBuild .frequency, .addBuild .add {
+  float: left;
+}
+
+.jobUrl {
+  width: 70%;
+}
+
+.frequency {
+  width: 20%;
+}
+
+.addBuild .add {
+  color: #777;
+  font-size: 2.5em;
+  line-height: 60px;
+  margin-left: 10px;
+  text-decoration: none;
+}
+.addBuild .add:hover {
+  color: #666;
+}
+
 
 .build-display {
   left: 0;
@@ -104,6 +142,7 @@ footer a {
   margin: 10px;
   margin-bottom: 0;
   padding: 20px;
+  position: relative;
 }
 
 .build:last-child {
@@ -121,6 +160,22 @@ footer a {
 
 .build.good h2, .build.bad h2,.build.good h3, .build.bad h3 {
   color: #fff;
+}
+
+.build .remove {
+  color: rgba(0,0,0,0.5);
+  background: transparent;
+  position: absolute;
+  text-decoration: none;
+  font-size: 2em;
+  position: absolute;
+  padding: 0 7px;
+  top: 0;
+  right: 0;
+}
+
+.build .remove:hover {
+  color: rgba(0,0,0,0.7);
 }
 
 .good {

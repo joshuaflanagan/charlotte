@@ -33,6 +33,7 @@ var Build = function(baseUrl, frequency){
   self.buildEstimate = ko.observable(new Date(0));
   self.pollingError = ko.observable(false);
   self.pollingFrequency = frequency;
+  self.removed = ko.observable(false);
 
   self.update = function(data) {
     self.pollingError(false);
@@ -48,6 +49,10 @@ var Build = function(baseUrl, frequency){
   };
 
   self.retrieve = function() {
+    if (self.removed() === true) {
+      "Build " + self.name() + " was Removed"
+      return;
+    }
     console.log("retrieving state for " + self.url());
     $.ajax({
       url: self.url(),
@@ -66,14 +71,31 @@ var Build = function(baseUrl, frequency){
 
 }
 
-function CharlotteViewModel(urls, pollingFrequency) {
+function CharlotteViewModel(urls) {
   var self = this;
-  this.jobUrls = ko.observableArray(urls);
-  this.pollingFrequency = ko.observable(pollingFrequency);
-  this.builds = ko.observableArray($.map(self.jobUrls(), function(url) { return new Build(url, this.pollingFrequency) }));
-  this.currentTime = ko.observable(new Date().formatted());
-  this.configVisible = ko.observable(!urls.length);
-  this.lastUpdate = ko.computed(function(){
+
+  self.currentTime = ko.observable(new Date().formatted());
+  self.urlToAdd = ko.observable();
+  self.pollingForBuild = ko.observable(30);
+
+  self.savedUrls = function() {
+    var localUrls = window.localStorage["jobUrls"];
+    var urls = "[]";
+    if (typeof localUrls !== "undefined") {
+      urls = localUrls;
+    }
+    return JSON.parse(urls);
+  }
+
+  self.builds = ko.observableArray($.map(self.savedUrls(), function(url) { return new Build(url, self.pollingForBuild()) }));
+
+  self.jobUrls = ko.computed(function() {
+    return $.map(self.builds(), function(build) {
+      return build.baseUrl;
+    });
+  });
+
+  self.lastUpdate = ko.computed(function(){
     var checkTimes = $.map(self.builds(), function(build) {
       return build.lastChecked()
     });
@@ -81,31 +103,27 @@ function CharlotteViewModel(urls, pollingFrequency) {
     return latest > 0 ? new Date(latest).formatted() : new Date(0);
   });
 
-  this.addBuildUrl = function(){
-    console.log("adding build");
-    self.jobUrls.push(self.urlToAdd());
-  }
-
-  this.showConfig = function(){ self.configVisible(true); }
-  this.hideConfig = function(){ self.configVisible(false); }
-
-  this.updateConfig = function(){
+  self.save = function(){
     window.localStorage["jobUrls"] = ko.toJSON(self.jobUrls());
-    window.localStorage["pollingFrequency"] = ko.toJSON(self.pollingFrequency());
-    window.location.reload(false);
   }
 
-  this.urlToAdd = ko.observable();
-  this.addUrl = function() {
+  self.addBuild = function() {
     console.log("adding url");
-    self.jobUrls.push(self.urlToAdd())
+    var new_build = new Build(self.urlToAdd(), self.pollingForBuild());
+    new_build.retrieve();
+    self.builds.push(new_build);
+    self.save();
     self.urlToAdd(null);
-  }
-  this.removeUrl = function(url) {
-    self.jobUrls.remove(url);
+    self.pollingForBuild(30);
   }
 
-  this.initAll = function(){
+  self.removeBuild = function(build) {
+    build.removed(true);
+    self.builds.remove(build);
+    self.save();
+  }
+
+  self.initAll = function(){
     console.log("initializing all...");
     ko.utils.arrayForEach(self.builds(), function(build){
       build.retrieve();
@@ -113,12 +131,12 @@ function CharlotteViewModel(urls, pollingFrequency) {
     self.updateTime();
   }
 
-  this.updateTime = function() {
+  self.updateTime = function() {
     self.currentTime(new Date().formatted());
     setTimeout(function(){ self.updateTime() }, 1 * 1000);
   }
 
-  this.initAll();
+  self.initAll();
 }
 
 Date.prototype.sameDay = function(other){
