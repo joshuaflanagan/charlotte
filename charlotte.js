@@ -34,6 +34,7 @@ var Build = function(baseUrl, frequency){
   self.pollingError = ko.observable(false);
   self.pollingFrequency = frequency;
   self.removed = ko.observable(false);
+  self.t = undefined;
 
   self.update = function(data) {
     self.pollingError(false);
@@ -45,7 +46,12 @@ var Build = function(baseUrl, frequency){
     self.status(data.lastCompletedBuild.result);
     self.lastChecked(new Date());
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
-    setTimeout(function(){ self.retrieve() }, self.pollingFrequency * 1000);
+    self.retry();
+  };
+
+  self.retry = function() {
+    clearTimeout(self.t);
+    self.t = setTimeout(function(){ self.retrieve() }, self.pollingFrequency * 1000);
   };
 
   self.retrieve = function() {
@@ -64,6 +70,7 @@ var Build = function(baseUrl, frequency){
       error: function(request, status, errorThrown) {
         console.log("Error while checking " + self.name());
         self.pollingError(true);
+        self.retry();
       },
       dataType: "jsonp"
     });
