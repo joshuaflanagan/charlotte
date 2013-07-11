@@ -78,7 +78,7 @@ function CharlotteViewModel(urls) {
   self.urlToAdd = ko.observable();
   self.pollingForBuild = ko.observable(30);
 
-  self.savedUrls = function() {
+  self.storedBuilds = function() {
     var localUrls = window.localStorage["jobUrls"];
     var urls = "[]";
     if (typeof localUrls !== "undefined") {
@@ -87,11 +87,24 @@ function CharlotteViewModel(urls) {
     return JSON.parse(urls);
   }
 
-  self.builds = ko.observableArray($.map(self.savedUrls(), function(url) { return new Build(url, self.pollingForBuild()) }));
+  self.builds = ko.observableArray(
+    $.map(self.storedBuilds(), function(data) {
+      return new Build(data.url, data.frequency)
+    })
+  );
 
   self.jobUrls = ko.computed(function() {
     return $.map(self.builds(), function(build) {
       return build.baseUrl;
+    });
+  });
+
+  self.storage = ko.computed(function() {
+    return $.map(self.builds(), function(build) {
+      return {
+        "url" : build.baseUrl,
+        "frequency" : build.pollingFrequency,
+      };
     });
   });
 
@@ -104,7 +117,7 @@ function CharlotteViewModel(urls) {
   });
 
   self.save = function(){
-    window.localStorage["jobUrls"] = ko.toJSON(self.jobUrls());
+    window.localStorage["jobUrls"] = ko.toJSON(self.storage());
   }
 
   self.addBuild = function() {
