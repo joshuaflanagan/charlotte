@@ -19,25 +19,26 @@
           bad: status() == 'FAILURE',
           building: building()
           }">
-          <h2 data-bind="text: name"></h2>
-          <h3 class="description">
-            <span data-bind="text: description"></span>
-          </h3>
-          <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
-          <!-- <span data-bind="text: lastChecked"></span>-->
-          <div data-bind="visible: pollingError()">
+          <div data-bind="visible: pollingError">
             <h3>Error connecting to the CI server</h3>
             <a href="#" data-bind="click: retrieve">Retry</a>
           </div>
-          <div class="build-progress" style="display: none;" data-bind="visible: building()">
-            <p>
-              Build started:
-              <span data-bind="text: buildStarted().formatted()"></span>
-            </p>
-            <p>
-              Expected finish:
-              <span data-bind="text: buildEstimate().formatted()"></span>
-            </p>
+
+          <div data-bind="visible: pollingError() === false">
+            <h2 data-bind="text: name"></h2>
+            <h3 class="description" data-bind="text: description"></h3>
+            <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
+            <!-- <span data-bind="text: lastChecked"></span>-->
+            <div class="build-progress" style="display: none;" data-bind="visible: building()">
+              <p>
+                Build started:
+                <span data-bind="text: buildStarted().formatted()"></span>
+              </p>
+              <p>
+                Expected finish:
+                <span data-bind="text: buildEstimate().formatted()"></span>
+              </p>
+            </div>
           </div>
         </div>
       </div>

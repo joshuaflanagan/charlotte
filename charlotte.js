@@ -63,8 +63,10 @@ var Build = function(baseUrl, frequency){
     $.ajax({
       url: self.url(),
       data: null,
+      timeout: (2 * 1000),
       success: function(data) {
         console.log("Data received for " + self.name());
+        self.pollingError(false);
         self.update(data)
       },
       error: function(request, status, errorThrown) {
