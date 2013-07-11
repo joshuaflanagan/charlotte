@@ -8,11 +8,11 @@ continuous integration server.
 
 1. Open `index.html` in a browser (no server needed, run as a local
    file)
-1. On the Configuration screen, add your job URLs in the form: `http://ciserver/job/jobname/`.
+2. On the Configuration screen, add your job URLs in the form: `http://ciserver/job/jobname/`.
 This is the same URL you would see in your browser when viewing the job
-from the Jenkins dashboard. Make sure you include the trailing slash,
-because I haven't spent any time on massaging user input.
-1. Click the *Close* button. Your browser will refresh, and should start
+from the Jenkins dashboard.
+
+3. Click the *Close* button. Your browser will refresh, and should start
    polling the CI server for each of the jobs you added.
 
 ***
