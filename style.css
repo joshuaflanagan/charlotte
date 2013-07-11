@@ -97,6 +97,9 @@ footer a {
 }
 
 .build {
+  color: #777;
+  background: #dedede;
+
   -webkit-box-flex: 1;
   margin: 10px;
   margin-bottom: 0;
@@ -108,13 +111,16 @@ footer a {
 }
 
 .build h2, .build h3 {
-  color: #fff;
   text-align: left;
 }
 
 .build h2 {
   line-height: 80px;
   -webkit-box-flex: 1;
+}
+
+.build.good h2, .build.bad h2,.build.good h3, .build.bad h3 {
+  color: #fff;
 }
 
 .good {
