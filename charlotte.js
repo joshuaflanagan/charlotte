@@ -1,10 +1,13 @@
 var humanize = function(string) {
-    string = $.trim(string);
-    var terms = string.split('_');
+  string = $.trim(string);
+  var terms = string.split('_');
 
-    for(var i=0; i < terms.length; i++){
-        terms[i] = terms[i].charAt(0).toUpperCase() + terms[i].slice(1);
-    }
+  for(var i=0; i < terms.length; i++){
+    terms[i] = terms[i].charAt(0).toUpperCase() + terms[i].slice(1);
+  }
+
+  return terms.join(' ');
+}
 
     return terms.join(' ');
 }
