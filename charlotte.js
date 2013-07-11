@@ -44,7 +44,7 @@ var Build = function(baseUrl, frequency){
     self.buildEstimate(new Date(data.lastBuild.timestamp + data.lastBuild.estimatedDuration));
     self.status(data.lastCompletedBuild.result);
     self.lastChecked(new Date());
-    console.log("check " + self.name() + " again in " + self.pollingFrequency + " seconds");
+    console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
     setTimeout(function(){ self.retrieve() }, self.pollingFrequency * 1000);
   };
 
@@ -53,16 +53,16 @@ var Build = function(baseUrl, frequency){
       "Build " + self.name() + " was Removed"
       return;
     }
-    console.log("retrieving state for " + self.url());
+    console.log("Retrieving state for " + self.name());
     $.ajax({
       url: self.url(),
       data: null,
       success: function(data) {
-        console.log("data received for " + self.url());
+        console.log("Data received for " + self.name());
         self.update(data)
       },
       error: function(request, status, errorThrown) {
-        console.log("error while checking " + self.url());
+        console.log("Error while checking " + self.name());
         self.pollingError(true);
       },
       dataType: "jsonp"
@@ -108,7 +108,7 @@ function CharlotteViewModel(urls) {
   }
 
   self.addBuild = function() {
-    console.log("adding url");
+    console.log("Adding new build " + self.urlToAdd());
     var new_build = new Build(self.urlToAdd(), self.pollingForBuild());
     new_build.retrieve();
     self.builds.push(new_build);
@@ -124,7 +124,7 @@ function CharlotteViewModel(urls) {
   }
 
   self.initAll = function(){
-    console.log("initializing all...");
+    console.log("Initializing all...");
     ko.utils.arrayForEach(self.builds(), function(build){
       build.retrieve();
     });
