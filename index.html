@@ -19,6 +19,7 @@
           bad: status() == 'FAILURE',
           building: building()
           }">
+          <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
           <div data-bind="visible: pollingError">
             <h3>Error connecting to the CI server</h3>
             <a href="#" data-bind="click: retrieve">Retry</a>
@@ -27,7 +28,6 @@
           <div data-bind="visible: pollingError() === false">
             <h2 data-bind="text: name"></h2>
             <h3 class="description" data-bind="text: description"></h3>
-            <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
             <!-- <span data-bind="text: lastChecked"></span>-->
             <div class="build-progress" style="display: none;" data-bind="visible: building()">
               <p>
