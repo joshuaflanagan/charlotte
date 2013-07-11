@@ -9,15 +9,21 @@ var humanize = function(string) {
   return terms.join(' ');
 }
 
-    return terms.join(' ');
+var massageUrl = function(url_string) {
+  var url = $.trim(url_string).toLowerCase();
+  if (!!url.match(/\/$/) === true) {
+    return url;
+  } else {
+    return url + "/";
+  }
 }
 
 var Build = function(baseUrl, frequency){
 
   var self = this;
 
-  self.baseUrl = baseUrl;
-  self.url = ko.observable(baseUrl + "api/json?tree=name,description,lastBuild[building,timestamp,estimatedDuration],healthReport[description,url,score],lastSuccessfulBuild[timestamp],changeSet[items[id,comment]],lastCompletedBuild[result,culprits[fullName]]&jsonp=?");
+  self.baseUrl = massageUrl(baseUrl);
+  self.url = ko.observable(self.baseUrl + "api/json?tree=name,description,lastBuild[building,timestamp,estimatedDuration],healthReport[description,url,score],lastSuccessfulBuild[timestamp],changeSet[items[id,comment]],lastCompletedBuild[result,culprits[fullName]]&jsonp=?");
   self.name = ko.observable(baseUrl);
   self.description = ko.observable("(no description)");
   self.status = ko.observable("UNKNOWN");
