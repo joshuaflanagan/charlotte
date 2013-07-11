@@ -80,7 +80,7 @@ var Build = function(baseUrl, frequency){
 
 }
 
-function CharlotteViewModel(urls) {
+function CharlotteViewModel() {
   var self = this;
 
   self.currentTime = ko.observable(new Date().formatted());
