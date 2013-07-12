@@ -91,10 +91,10 @@ function CharlotteViewModel() {
   self.formShowing = ko.observable(false);
 
   self.storedBuilds = function() {
-    var localUrls = window.localStorage["ci-builds"];
-    var urls = "[]";
-    if (typeof localUrls !== "undefined") {
-      urls = localUrls;
+    var ci_builds = localStorage["ci-builds"],
+        urls = "[]";
+    if ((typeof ci_builds !== "undefined") && (ci_builds !== "undefined")) {
+      urls = ci_builds;
     }
     return JSON.parse(urls);
   }
@@ -123,7 +123,7 @@ function CharlotteViewModel() {
   });
 
   self.save = function(){
-    window.localStorage["ci-builds"] = ko.toJSON(self.storage());
+    localStorage["ci-builds"] = ko.toJSON(self.storage());
   }
 
   self.toggleForm = function() {
