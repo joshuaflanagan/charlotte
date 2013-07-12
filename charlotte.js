@@ -91,7 +91,7 @@ function CharlotteViewModel() {
   self.formShowing = ko.observable(false);
 
   self.storedBuilds = function() {
-    var localUrls = window.localStorage["jobUrls"];
+    var localUrls = window.localStorage["ci-builds"];
     var urls = "[]";
     if (typeof localUrls !== "undefined") {
       urls = localUrls;
@@ -123,7 +123,7 @@ function CharlotteViewModel() {
   });
 
   self.save = function(){
-    window.localStorage["jobUrls"] = ko.toJSON(self.storage());
+    window.localStorage["ci-builds"] = ko.toJSON(self.storage());
   }
 
   self.toggleForm = function() {
