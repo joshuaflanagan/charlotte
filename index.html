@@ -7,12 +7,6 @@
   <body>
 
     <div id="buildsScreen">
-      <form action="#" class="addBuild">
-        <input type="text" data-bind="value: urlToAdd" class="jobUrl" placeholder="Job Url" />
-        <input type="text" data-bind="value: pollingForBuild" class="frequency" placeholder="Job Url" />
-        <a href="#" data-bind="click: addBuild" class="add">&#43;</a>
-      </form>
-
       <div class="build-display" data-bind="foreach: builds">
         <div class="build" data-bind="css: {
           good: status() == 'SUCCESS',
@@ -43,7 +37,16 @@
         </div>
       </div>
 
+      <form action="#" data-bind="visible: formShowing, submit: addBuild" class="addBuild">
+        <input type="text" data-bind="value: urlToAdd" class="jobUrl" placeholder="Job Url" />
+        <input type="text" data-bind="value: pollingForBuild" class="frequency" placeholder="Job Url" />
+        <input type="submit" value="Add" />
+      </form>
+
       <footer>
+        <section>
+          <p><a href="#" data-bind="click: toggleForm, text: formToggleText()" class="add">&#43;</a></p>
+        </section>
         <section>
           <p>State updated: <span data-bind="text: lastUpdate"></span></p>
         </section>

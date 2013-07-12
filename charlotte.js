@@ -86,6 +86,7 @@ function CharlotteViewModel() {
   self.currentTime = ko.observable(new Date().formatted());
   self.urlToAdd = ko.observable();
   self.pollingForBuild = ko.observable(30);
+  self.formShowing = ko.observable(false);
 
   self.storedBuilds = function() {
     var localUrls = window.localStorage["jobUrls"];
@@ -129,6 +130,14 @@ function CharlotteViewModel() {
     window.localStorage["jobUrls"] = ko.toJSON(self.storage());
   }
 
+  self.toggleForm = function() {
+    self.formShowing(!self.formShowing());
+  }
+
+  self.formToggleText = function() {
+    return (self.formShowing() === true ? "-" : "+");
+  }
+
   self.addBuild = function() {
     console.log("Adding new build " + self.urlToAdd());
     var new_build = new Build(self.urlToAdd(), self.pollingForBuild());
@@ -137,6 +146,7 @@ function CharlotteViewModel() {
     self.save();
     self.urlToAdd(null);
     self.pollingForBuild(30);
+    $(".jobUrl").focus();
   }
 
   self.removeBuild = function(build) {
