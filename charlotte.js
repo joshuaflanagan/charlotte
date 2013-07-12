@@ -56,9 +56,11 @@ var Build = function(baseUrl, frequency){
 
   self.retrieve = function() {
     if (self.removed() === true) {
-      "Build " + self.name() + " was Removed"
+      console.log("Build " + self.name() + " was Removed");
+      clearTimeout(self.t);
       return;
     }
+
     console.log("Retrieving state for " + self.name());
     $.ajax({
       url: self.url(),
