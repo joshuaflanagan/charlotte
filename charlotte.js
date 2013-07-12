@@ -105,12 +105,6 @@ function CharlotteViewModel() {
     })
   );
 
-  self.jobUrls = ko.computed(function() {
-    return $.map(self.builds(), function(build) {
-      return build.baseUrl;
-    });
-  });
-
   self.storage = ko.computed(function() {
     return $.map(self.builds(), function(build) {
       return {
