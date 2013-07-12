@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+
     <div id="buildsScreen">
       <div class="build-display" data-bind="foreach: builds">
         <div class="build" data-bind="css: {
@@ -12,30 +13,39 @@
           bad: status() == 'FAILURE',
           building: building()
           }">
-          <h2 data-bind="text: name"></h2>
-          <h3 class="description">
-            <span data-bind="text: description"></span>
-          </h3>
-          <!-- <span data-bind="text: lastChecked"></span>-->
-          <div data-bind="visible: pollingError()">
+          <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
+          <div data-bind="visible: pollingError">
             <h3>Error connecting to the CI server</h3>
+            <a href="#" data-bind="click: retrieve">Retry</a>
           </div>
-          <div class="build-progress" style="display: none;" data-bind="visible: building()">
-            <p>
-              Build started:
-              <span data-bind="text: buildStarted().formatted()"></span>
-            </p>
-            <p>
-              Expected finish:
-              <span data-bind="text: buildEstimate().formatted()"></span>
-            </p>
+
+          <div data-bind="visible: pollingError() === false">
+            <h2 data-bind="text: name"></h2>
+            <h3 class="description" data-bind="text: description"></h3>
+            <!-- <span data-bind="text: lastChecked"></span>-->
+            <div class="build-progress" style="display: none;" data-bind="visible: building()">
+              <p>
+                Build started:
+                <span data-bind="text: buildStarted().formatted()"></span>
+              </p>
+              <p>
+                Expected finish:
+                <span data-bind="text: buildEstimate().formatted()"></span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
+      <form action="#" data-bind="visible: formShowing, submit: addBuild" class="addBuild">
+        <input type="text" data-bind="value: urlToAdd" class="jobUrl" placeholder="Job Url" />
+        <input type="text" data-bind="value: pollingForBuild" class="frequency" placeholder="Job Url" />
+        <input type="submit" value="Add" />
+      </form>
+
       <footer>
         <section>
-          <p><a href="#" data-bind="click: showConfig">configure</a></p>
+          <p><a href="#" data-bind="click: toggleForm, text: formToggleText()" class="add">&#43;</a></p>
         </section>
         <section>
           <p>State updated: <span data-bind="text: lastUpdate"></span></p>
@@ -46,32 +56,13 @@
       </footer>
     </div>
 
-    <div class="configScreen" style="display: none;" data-bind="visible: configVisible">
-      <a class="configClose" href="#" data-bind="click: hideConfig">&times; Close</a>
-      <form id="configForm">
-        <input placeholder="Job Url..." data-bind="value: urlToAdd" />
-        <button data-bind="click: addUrl">Add Job Url</button>
-        <ul data-bind="foreach: jobUrls">
-          <li>
-            <span data-bind="text: $data"></span>
-            <a href="#" data-bind="click: $root.removeUrl">&times;</a>
-          </li>
-        </ul>
-        <input placeholder="Polling Frequeny" data-bind="value: pollingFrequency" />
-        <a href="#" data-bind="click: updateConfig">Start</a>
-      </form>
-    </div>
-
   </body>
 
   <script src="jquery.min.js"></script>
   <script src="knockout.min.js"></script>
   <script src="charlotte.js"></script>
   <script>
-    var savedUrls = JSON.parse(window.localStorage["jobUrls"] || '[]');
-    var pollingFrequency = JSON.parse(window.localStorage["pollingFrequency"] || '30');
-
-    var vm = new CharlotteViewModel(savedUrls, pollingFrequency);
+    var vm = new CharlotteViewModel();
     ko.applyBindings(vm);
   </script>
 </html>

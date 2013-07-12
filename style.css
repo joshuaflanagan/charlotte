@@ -84,6 +84,48 @@ footer a {
   text-transform: capitalize;
 }
 
+footer .add {
+  color: #ccc;
+  font-size: 2.5em;
+  line-height: 100%;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+footer .add:hover {
+  color: #eee;
+}
+
+.addBuild {
+  color: #777;
+  background: #dedede;
+  height: 60px;
+  padding: 0; margin: 0;
+}
+
+.addBuild input {
+  font-size: 1em;
+  border-radius: 2px;
+  border: none;
+  margin: 15px 0 15px 10px;
+  padding: 5px;
+}
+
+.addBuild input[type=submit] {
+  cursor: pointer;
+}
+
+.addBuild .jobUrl, .addBuild .frequency {
+  float: left;
+}
+
+.jobUrl {
+  width: 65%;
+}
+
+.frequency {
+  width: 20%;
+}
 
 .build-display {
   left: 0;
@@ -104,6 +146,7 @@ footer a {
   margin: 10px;
   margin-bottom: 0;
   padding: 20px;
+  position: relative;
 }
 
 .build:last-child {
@@ -123,6 +166,22 @@ footer a {
   color: #fff;
 }
 
+.build .remove {
+  color: rgba(0,0,0,0.5);
+  background: transparent;
+  position: absolute;
+  text-decoration: none;
+  font-size: 2em;
+  position: absolute;
+  padding: 0 7px;
+  top: 0;
+  right: 0;
+}
+
+.build .remove:hover {
+  color: rgba(0,0,0,0.7);
+}
+
 .good {
   background-color: #05A31A;
 }
@@ -135,8 +194,8 @@ footer a {
   background: #FFF824;
 }
 
-.building h2, .building h3 {
-  color: #7D7A0E;
+.build.building h2, .build.building h3 {
+  color: #999400;
 }
 
 .build-progress {
