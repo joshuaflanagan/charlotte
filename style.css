@@ -39,7 +39,7 @@ li {
   padding: 7px 0;
 }
 
-#buildsScreen {
+.build-screen {
   height: 100%;
   width: 100%;
   display: -moz-box;

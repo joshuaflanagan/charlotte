@@ -6,14 +6,17 @@
   </head>
   <body>
 
-    <div id="buildsScreen">
+    <div class="build-screen">
+
       <div class="build-display" data-bind="foreach: builds">
         <div class="build" data-bind="css: {
-          good: status() == 'SUCCESS',
-          bad: status() == 'FAILURE',
-          building: building()
+            good: status() == 'SUCCESS',
+            bad: status() == 'FAILURE',
+            building: building()
           }">
+
           <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
+
           <div data-bind="visible: pollingError">
             <h3>Error connecting to the CI server</h3>
             <a href="#" data-bind="click: retrieve">Retry</a>
@@ -34,6 +37,7 @@
               </p>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -54,8 +58,8 @@
           <p><span data-bind="text: currentTime"></span></p>
         </section>
       </footer>
-    </div>
 
+    </div>
   </body>
 
   <script src="jquery.min.js"></script>
@@ -63,6 +67,6 @@
   <script src="charlotte.js"></script>
   <script>
     var vm = new CharlotteViewModel();
-    ko.applyBindings(vm);
+    ko.applyBindings(vm, $(".build-screen")[0]);
   </script>
 </html>
