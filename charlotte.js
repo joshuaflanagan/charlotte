@@ -82,8 +82,46 @@ var Build = function(baseUrl, frequency){
 
 }
 
+function FormViewModel(charlotte) {
+
+  var self = this;
+
+  self.charlotte = charlotte;
+  self.visible = ko.observable(false);
+  self.text    = ko.observable("+");
+  self.url     = ko.observable();
+  self.polling = ko.observable(30);
+
+  self.add = function() {
+    var build = new Build(self.url(), self.polling());
+    console.log("Adding new build " + build.url());
+    charlotte.addBuild(build);
+    self.reset();
+  }
+
+  self.toggle = function() {
+    if (self.visible() === true) {
+      self.visible(false);
+      self.text("+");
+    } else {
+      self.visible(true);
+      self.text("-");
+      self.reset();
+    }
+  }
+
+  self.reset = function() {
+    self.url(null);
+    self.polling(30);
+    $(".jobUrl").focus();
+  }
+
+}
+
 function CharlotteViewModel() {
   var self = this;
+
+  self.form = new FormViewModel(self);
 
   self.currentTime = ko.observable(new Date().formatted());
   self.urlToAdd = ko.observable();
@@ -126,23 +164,10 @@ function CharlotteViewModel() {
     localStorage["ci-builds"] = ko.toJSON(self.storage());
   }
 
-  self.toggleForm = function() {
-    self.formShowing(!self.formShowing());
-  }
-
-  self.formToggleText = function() {
-    return (self.formShowing() === true ? "-" : "+");
-  }
-
-  self.addBuild = function() {
-    console.log("Adding new build " + self.urlToAdd());
-    var new_build = new Build(self.urlToAdd(), self.pollingForBuild());
-    new_build.retrieve();
-    self.builds.push(new_build);
+  self.addBuild = function(build) {
+    build.retrieve();
+    self.builds.push(build);
     self.save();
-    self.urlToAdd(null);
-    self.pollingForBuild(30);
-    $(".jobUrl").focus();
   }
 
   self.removeBuild = function(build) {

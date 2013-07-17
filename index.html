@@ -41,15 +41,15 @@
         </div>
       </div>
 
-      <form action="#" data-bind="visible: formShowing, submit: addBuild" class="addBuild">
-        <input type="text" data-bind="value: urlToAdd" class="jobUrl" placeholder="Job Url" />
-        <input type="text" data-bind="value: pollingForBuild" class="frequency" placeholder="Job Url" />
+      <form action="#" data-bind="visible: form.visible, submit: form.add" class="addBuild">
+        <input type="text" data-bind="value: form.url" class="jobUrl" placeholder="Job Url" />
+        <input type="text" data-bind="value: form.polling" class="frequency" placeholder="Polling Frequency" />
         <input type="submit" value="Add" />
       </form>
 
       <footer>
         <section>
-          <p><a href="#" data-bind="click: toggleForm, text: formToggleText()" class="add">&#43;</a></p>
+          <p><a href="#" data-bind="click: form.toggle, text: form.text" class="add"></a></p>
         </section>
         <section>
           <p>State updated: <span data-bind="text: lastUpdate"></span></p>
