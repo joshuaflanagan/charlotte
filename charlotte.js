@@ -201,7 +201,7 @@ function CharlotteViewModel() {
   self.initAll();
 }
 
-Date.prototype.sameDay = function(other){
+Date.prototype.isSameDay = function(other){
   if (other.getYear() != this.getYear()) return false;
   if (other.getMonth() != this.getMonth()) return false;
   if (other.getDate() != this.getDate()) return false;
@@ -216,7 +216,7 @@ Date.prototype.formatted = function(alwaysShowDate){
     ampm = "pm"
   }
   alwaysShowDate = typeof alwaysShowDate !== 'undefined' ? alwaysShowDate : false;
-  var datePart = (alwaysShowDate || this.sameDay(new Date())) ? '' : ' on ' + (this.getMonth() + 1) + '/' + pad(this.getDate());
+  var datePart = (alwaysShowDate || this.isSameDay(new Date())) ? '' : ' on ' + (this.getMonth() + 1) + '/' + pad(this.getDate());
   return hours + ':' + pad(this.getMinutes()) + ':' + pad(this.getSeconds()) + ' ' + ampm + datePart;
 }
 
