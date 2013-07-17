@@ -39,10 +39,21 @@ var Build = function(baseUrl, frequency){
     self.pollingError(false);
     self.name(humanize(data.name));
     self.description(data.description);
-    self.isBuilding(data.lastBuild.building);
-    self.buildStarted(new Date(data.lastBuild.timestamp));
-    self.buildEstimate(new Date(data.lastBuild.timestamp + data.lastBuild.estimatedDuration));
-    self.status(data.lastCompletedBuild.result);
+    if (data.lastBuild) {
+      var last = data.lastBuild
+      if (last.building) {
+        self.isBuilding(last.building);
+      }
+      if (last.timestamp) {
+        self.buildStarted(new Date(last.timestamp));
+        if (last.estimatedDuration) {
+          self.buildEstimate(new Date(last.timestamp + last.estimatedDuration));
+        }
+      }
+    }
+    if (data.lastCompletedBuild) {
+      self.status(data.lastCompletedBuild.result);
+    }
     self.lastChecked(new Date());
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
     self.restart();
