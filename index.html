@@ -12,7 +12,7 @@
         <div class="build" data-bind="css: {
             good: status() == 'SUCCESS',
             bad: status() == 'FAILURE',
-            building: building()
+            building: isBuilding()
           }">
 
           <a href="#" class="remove" data-bind="click: $root.removeBuild">&times;</a>
@@ -26,7 +26,7 @@
             <h2 data-bind="text: name"></h2>
             <h3 class="description" data-bind="text: description"></h3>
             <!-- <span data-bind="text: lastChecked"></span>-->
-            <div class="build-progress" style="display: none;" data-bind="visible: building()">
+            <div class="build-progress" style="display: none;" data-bind="visible: isBuilding()">
               <p>
                 Build started:
                 <span data-bind="text: buildStarted().formatted()"></span>

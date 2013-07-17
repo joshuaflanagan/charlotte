@@ -28,7 +28,7 @@ var Build = function(baseUrl, frequency){
   self.description = ko.observable("(no description)");
   self.status = ko.observable("UNKNOWN");
   self.lastChecked = ko.observable();
-  self.building = ko.observable(false);
+  self.isBuilding = ko.observable(false);
   self.buildStarted = ko.observable(new Date(0));
   self.buildEstimate = ko.observable(new Date(0));
   self.pollingError = ko.observable(false);
@@ -40,7 +40,7 @@ var Build = function(baseUrl, frequency){
     self.pollingError(false);
     self.name(humanize(data.name));
     self.description(data.description);
-    self.building(data.lastBuild.building);
+    self.isBuilding(data.lastBuild.building);
     self.buildStarted(new Date(data.lastBuild.timestamp));
     self.buildEstimate(new Date(data.lastBuild.timestamp + data.lastBuild.estimatedDuration));
     self.status(data.lastCompletedBuild.result);
