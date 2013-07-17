@@ -71,7 +71,6 @@ var Build = function(baseUrl, frequency){
   self.fetch = function() {
     console.log("Retrieving state for " + self.name());
     var twoSeconds = 2 * 1000;
-    self.lastChecked(new Date());
     $.ajax({
       url: self.url(),
       data: null,
@@ -85,6 +84,9 @@ var Build = function(baseUrl, frequency){
         console.log("Error while checking " + self.name());
         self.pollingError(true);
         self.restart();
+      },
+      complete: function() {
+        self.lastChecked(new Date());
       },
       dataType: "jsonp"
     });
