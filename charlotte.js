@@ -33,7 +33,6 @@ var Build = function(baseUrl, frequency){
   self.buildEstimate = ko.observable(new Date(0));
   self.pollingError = ko.observable(false);
   self.pollingFrequency = frequency;
-  self.removed = ko.observable(false);
   self.t = undefined;
 
   self.update = function(data) {
@@ -46,26 +45,26 @@ var Build = function(baseUrl, frequency){
     self.status(data.lastCompletedBuild.result);
     self.lastChecked(new Date());
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
-    self.retry();
+    self.restart();
+  };
+
+  self.restart = function() {
+    clearTimeout(self.t);
+    self.t = setTimeout(function(){ self.fetch() }, self.pollingFrequency * 1000);
   };
 
   self.retry = function() {
-    clearTimeout(self.t);
-    self.t = setTimeout(function(){ self.retrieve() }, self.pollingFrequency * 1000);
-  };
+    self.restart();
+    self.fetch();
+  }
 
-  self.retrieve = function() {
-    if (self.removed() === true) {
-      console.log("Build " + self.name() + " was Removed");
-      clearTimeout(self.t);
-      return;
-    }
-
+  self.fetch = function() {
     console.log("Retrieving state for " + self.name());
+    var twoSeconds = 2 * 1000;
     $.ajax({
       url: self.url(),
       data: null,
-      timeout: (2 * 1000),
+      timeout: twoSeconds,
       success: function(data) {
         console.log("Data received for " + self.name());
         self.pollingError(false);
@@ -74,10 +73,19 @@ var Build = function(baseUrl, frequency){
       error: function(request, status, errorThrown) {
         console.log("Error while checking " + self.name());
         self.pollingError(true);
-        self.retry();
+        self.restart();
       },
       dataType: "jsonp"
     });
+  }
+
+  self.stop = function() {
+    clearTimeout(self.t);
+  }
+
+  self.start = function() {
+    console.log("Starting " + self.name());
+    self.fetch();
   }
 
 }
@@ -181,13 +189,14 @@ function CharlotteViewModel() {
   }
 
   self.addBuild = function(build) {
-    build.retrieve();
+    build.start();
     self.builds.push(build);
     self.save();
   }
 
   self.removeBuild = function(build) {
-    build.removed(true);
+    build.stop();
+    console.log("Build " + build.name() + " was Removed");
     self.builds.remove(build);
     self.save();
   }
@@ -195,7 +204,7 @@ function CharlotteViewModel() {
   self.initAll = function(){
     console.log("Initializing all...");
     ko.utils.arrayForEach(self.builds(), function(build){
-      build.retrieve();
+      build.start();
     });
     self.clock.start();
   }
@@ -203,7 +212,7 @@ function CharlotteViewModel() {
   self.initAll();
 }
 
-Date.prototype.sameDay = function(other){
+Date.prototype.isSameDay = function(other){
   if (other.getYear() != this.getYear()) return false;
   if (other.getMonth() != this.getMonth()) return false;
   if (other.getDate() != this.getDate()) return false;
@@ -218,7 +227,7 @@ Date.prototype.formatted = function(alwaysShowDate){
     ampm = "pm"
   }
   alwaysShowDate = typeof alwaysShowDate !== 'undefined' ? alwaysShowDate : false;
-  var datePart = (alwaysShowDate || this.sameDay(new Date())) ? '' : ' on ' + (this.getMonth() + 1) + '/' + pad(this.getDate());
+  var datePart = (alwaysShowDate || this.isSameDay(new Date())) ? '' : ' on ' + (this.getMonth() + 1) + '/' + pad(this.getDate());
   return hours + ':' + pad(this.getMinutes()) + ':' + pad(this.getSeconds()) + ' ' + ampm + datePart;
 }
 
