@@ -33,7 +33,6 @@ var Build = function(baseUrl, frequency){
   self.buildEstimate = ko.observable(new Date(0));
   self.pollingError = ko.observable(false);
   self.pollingFrequency = frequency;
-  self.removed = ko.observable(false);
   self.t = undefined;
 
   self.update = function(data) {
@@ -46,21 +45,15 @@ var Build = function(baseUrl, frequency){
     self.status(data.lastCompletedBuild.result);
     self.lastChecked(new Date());
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
-    self.retry();
+    self.restart();
   };
 
-  self.retry = function() {
+  self.restart = function() {
     clearTimeout(self.t);
-    self.t = setTimeout(function(){ self.retrieve() }, self.pollingFrequency * 1000);
+    self.t = setTimeout(function(){ self.fetch() }, self.pollingFrequency * 1000);
   };
 
-  self.retrieve = function() {
-    if (self.removed() === true) {
-      console.log("Build " + self.name() + " was Removed");
-      clearTimeout(self.t);
-      return;
-    }
-
+  self.fetch = function() {
     console.log("Retrieving state for " + self.name());
     $.ajax({
       url: self.url(),
@@ -74,10 +67,19 @@ var Build = function(baseUrl, frequency){
       error: function(request, status, errorThrown) {
         console.log("Error while checking " + self.name());
         self.pollingError(true);
-        self.retry();
+        self.restart();
       },
       dataType: "jsonp"
     });
+  }
+
+  self.stop = function() {
+    clearTimeout(self.t);
+  }
+
+  self.start = function() {
+    console.log("Starting " + self.name());
+    self.fetch();
   }
 
 }
@@ -165,13 +167,14 @@ function CharlotteViewModel() {
   }
 
   self.addBuild = function(build) {
-    build.retrieve();
+    build.start();
     self.builds.push(build);
     self.save();
   }
 
   self.removeBuild = function(build) {
-    build.removed(true);
+    build.stop();
+    console.log("Build " + build.name() + " was Removed");
     self.builds.remove(build);
     self.save();
   }
@@ -179,7 +182,7 @@ function CharlotteViewModel() {
   self.initAll = function(){
     console.log("Initializing all...");
     ko.utils.arrayForEach(self.builds(), function(build){
-      build.retrieve();
+      build.start();
     });
     self.updateTime();
   }
