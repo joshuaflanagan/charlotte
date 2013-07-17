@@ -27,36 +27,35 @@ var Build = function(baseUrl, frequency){
   self.name = ko.observable(baseUrl);
   self.description = ko.observable("(no description)");
   self.status = ko.observable("UNKNOWN");
-  self.lastChecked = ko.observable();
+  self.lastChecked = ko.observable(new Date());
   self.isBuilding = ko.observable(false);
   self.buildStarted = ko.observable(new Date(0));
   self.buildEstimate = ko.observable(new Date(0));
   self.pollingError = ko.observable(false);
   self.pollingFrequency = frequency;
-  self.t = undefined;
+  self.interval = undefined;
 
   self.update = function(data) {
     self.pollingError(false);
     self.name(humanize(data.name));
     self.description(data.description);
-    self.isBuilding(data.lastBuild.building);
-    self.buildStarted(new Date(data.lastBuild.timestamp));
-    self.buildEstimate(new Date(data.lastBuild.timestamp + data.lastBuild.estimatedDuration));
-    self.status(data.lastCompletedBuild.result);
-    self.lastChecked(new Date());
+    if (data.lastBuild) {
+      var last = data.lastBuild
+      if (last.building) {
+        self.isBuilding(last.building);
+      }
+      if (last.timestamp) {
+        self.buildStarted(new Date(last.timestamp));
+        if (last.estimatedDuration) {
+          self.buildEstimate(new Date(last.timestamp + last.estimatedDuration));
+        }
+      }
+    }
+    if (data.lastCompletedBuild) {
+      self.status(data.lastCompletedBuild.result);
+    }
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
-    self.restart();
   };
-
-  self.restart = function() {
-    clearTimeout(self.t);
-    self.t = setTimeout(function(){ self.fetch() }, self.pollingFrequency * 1000);
-  };
-
-  self.retry = function() {
-    self.restart();
-    self.fetch();
-  }
 
   self.fetch = function() {
     console.log("Retrieving state for " + self.name());
@@ -73,19 +72,23 @@ var Build = function(baseUrl, frequency){
       error: function(request, status, errorThrown) {
         console.log("Error while checking " + self.name());
         self.pollingError(true);
-        self.restart();
+      },
+      complete: function() {
+        self.lastChecked(new Date());
       },
       dataType: "jsonp"
     });
   }
 
   self.stop = function() {
-    clearTimeout(self.t);
+    clearInterval(self.interval);
   }
 
   self.start = function() {
     console.log("Starting " + self.name());
+    self.stop();
     self.fetch();
+    self.interval = setInterval(function(){ self.fetch() }, self.pollingFrequency * 1000);
   }
 
 }
