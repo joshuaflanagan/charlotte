@@ -153,8 +153,9 @@ footer .add:hover {
   margin-bottom: 10px;
 }
 
-.build h2, .build h3 {
+.build h2, .build h3, .build h4 {
   text-align: left;
+  line-height: 1.5em;
 }
 
 .build h2 {
@@ -162,7 +163,12 @@ footer .add:hover {
   -webkit-box-flex: 1;
 }
 
-.build.good h2, .build.bad h2,.build.good h3, .build.bad h3 {
+.build.good h2,
+.build.good h3,
+.build.good h4,
+.build.bad h2,
+.build.bad h3,
+.build.bad h4 {
   color: #fff;
 }
 

@@ -25,7 +25,10 @@
           <div data-bind="visible: pollingError() === false">
             <h2 data-bind="text: name"></h2>
             <h3 class="description" data-bind="text: description"></h3>
-            <!-- <span data-bind="text: lastChecked"></span>-->
+            <h4>
+              Last Checked:
+              <span data-bind="text: lastChecked().formatted()"></span>
+            </h4>
             <div class="build-progress" style="display: none;" data-bind="visible: isBuilding()">
               <p>
                 Build started:
@@ -50,9 +53,6 @@
       <footer>
         <section>
           <p><a href="#" data-bind="click: form.toggle, text: form.text" class="add"></a></p>
-        </section>
-        <section>
-          <p>State updated: <span data-bind="text: lastUpdate"></span></p>
         </section>
         <section>
           <p><span data-bind="text: clock.time().formatted()"></span></p>

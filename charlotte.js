@@ -27,7 +27,7 @@ var Build = function(baseUrl, frequency){
   self.name = ko.observable(baseUrl);
   self.description = ko.observable("(no description)");
   self.status = ko.observable("UNKNOWN");
-  self.lastChecked = ko.observable();
+  self.lastChecked = ko.observable(new Date());
   self.isBuilding = ko.observable(false);
   self.buildStarted = ko.observable(new Date(0));
   self.buildEstimate = ko.observable(new Date(0));
@@ -54,7 +54,6 @@ var Build = function(baseUrl, frequency){
     if (data.lastCompletedBuild) {
       self.status(data.lastCompletedBuild.result);
     }
-    self.lastChecked(new Date());
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
     self.restart();
   };
@@ -72,6 +71,7 @@ var Build = function(baseUrl, frequency){
   self.fetch = function() {
     console.log("Retrieving state for " + self.name());
     var twoSeconds = 2 * 1000;
+    self.lastChecked(new Date());
     $.ajax({
       url: self.url(),
       data: null,
