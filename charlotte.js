@@ -118,12 +118,28 @@ function FormViewModel(charlotte) {
 
 }
 
+function Clock() {
+  var self = this;
+
+  self.time = ko.observable(new Date());
+  self.interval = null;
+
+  self.tick = function() {
+    self.time(new Date());
+  }
+
+  self.start = function() {
+    var oneSecond = 1000;
+    self.interval = setInterval(function(){ self.tick() }, oneSecond);
+  }
+}
+
 function CharlotteViewModel() {
   var self = this;
 
   self.form = new FormViewModel(self);
+  self.clock = new Clock();
 
-  self.currentTime = ko.observable(new Date().formatted());
   self.urlToAdd = ko.observable();
   self.pollingForBuild = ko.observable(30);
   self.formShowing = ko.observable(false);
@@ -157,7 +173,7 @@ function CharlotteViewModel() {
       return build.lastChecked()
     });
     var latest = Math.max.apply(Math, checkTimes);
-    return latest > 0 ? new Date(latest).formatted() : new Date(0);
+    return latest > 0 ? new Date(latest).formatted() : new Date().formatted();
   });
 
   self.save = function(){
@@ -181,12 +197,7 @@ function CharlotteViewModel() {
     ko.utils.arrayForEach(self.builds(), function(build){
       build.retrieve();
     });
-    self.updateTime();
-  }
-
-  self.updateTime = function() {
-    self.currentTime(new Date().formatted());
-    setTimeout(function(){ self.updateTime() }, 1 * 1000);
+    self.clock.start();
   }
 
   self.initAll();
