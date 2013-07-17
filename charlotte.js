@@ -53,6 +53,11 @@ var Build = function(baseUrl, frequency){
     self.t = setTimeout(function(){ self.fetch() }, self.pollingFrequency * 1000);
   };
 
+  self.retry = function() {
+    self.restart();
+    self.fetch();
+  }
+
   self.fetch = function() {
     console.log("Retrieving state for " + self.name());
     var twoSeconds = 2 * 1000;
