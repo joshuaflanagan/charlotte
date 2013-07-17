@@ -33,7 +33,7 @@ var Build = function(baseUrl, frequency){
   self.buildEstimate = ko.observable(new Date(0));
   self.pollingError = ko.observable(false);
   self.pollingFrequency = frequency;
-  self.t = undefined;
+  self.interval = undefined;
 
   self.update = function(data) {
     self.pollingError(false);
@@ -55,18 +55,7 @@ var Build = function(baseUrl, frequency){
       self.status(data.lastCompletedBuild.result);
     }
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
-    self.restart();
   };
-
-  self.restart = function() {
-    clearTimeout(self.t);
-    self.t = setTimeout(function(){ self.fetch() }, self.pollingFrequency * 1000);
-  };
-
-  self.retry = function() {
-    self.restart();
-    self.fetch();
-  }
 
   self.fetch = function() {
     console.log("Retrieving state for " + self.name());
@@ -83,7 +72,6 @@ var Build = function(baseUrl, frequency){
       error: function(request, status, errorThrown) {
         console.log("Error while checking " + self.name());
         self.pollingError(true);
-        self.restart();
       },
       complete: function() {
         self.lastChecked(new Date());
@@ -93,12 +81,14 @@ var Build = function(baseUrl, frequency){
   }
 
   self.stop = function() {
-    clearTimeout(self.t);
+    clearInterval(self.interval);
   }
 
   self.start = function() {
     console.log("Starting " + self.name());
+    self.stop();
     self.fetch();
+    self.interval = setInterval(function(){ self.fetch() }, self.pollingFrequency * 1000);
   }
 
 }
