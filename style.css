@@ -188,6 +188,18 @@ footer .add:hover {
   color: rgba(0,0,0,0.7);
 }
 
+.build-info, .build-progress {
+  float: left;
+}
+
+.build-info {
+  width: 60%;
+}
+
+.build-progress {
+  width: 40%;
+}
+
 .good {
   background-color: #05A31A;
 }
@@ -200,7 +212,7 @@ footer .add:hover {
   background: #FFF824;
 }
 
-.build.building h2, .build.building h3 {
+.build.building h2, .build.building h3, .build.building h4 {
   color: #999400;
 }
 
