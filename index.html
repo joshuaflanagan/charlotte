@@ -23,12 +23,14 @@
           </div>
 
           <div data-bind="visible: pollingError() === false">
-            <h2 data-bind="text: name"></h2>
-            <h3 class="description" data-bind="text: description"></h3>
-            <h4>
-              Last Checked:
-              <span data-bind="text: lastChecked().formatted()"></span>
-            </h4>
+            <div class="build-info">
+              <h2 data-bind="text: name"></h2>
+              <h3 class="description" data-bind="text: description"></h3>
+              <h4>
+                Last Checked:
+                <span data-bind="text: lastChecked().formatted()"></span>
+              </h4>
+            </div>
             <div class="build-progress" style="display: none;" data-bind="visible: isBuilding()">
               <p>
                 Build started:
