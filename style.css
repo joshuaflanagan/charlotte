@@ -200,7 +200,7 @@ footer .add:hover {
   background: #FFF824;
 }
 
-.build.building h2, .build.building h3 {
+.build.building h2, .build.building h3, .build.building h4 {
   color: #999400;
 }
 
