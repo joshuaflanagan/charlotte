@@ -36,24 +36,14 @@ var Build = function(baseUrl, frequency){
   self.interval = undefined;
 
   self.update = function(data) {
+    var last = data.lastBuild;
     self.pollingError(false);
     self.name(humanize(data.name));
     self.description(data.description);
-    if (data.lastBuild) {
-      var last = data.lastBuild
-      if (last.building) {
-        self.isBuilding(last.building);
-      }
-      if (last.timestamp) {
-        self.buildStarted(new Date(last.timestamp));
-        if (last.estimatedDuration) {
-          self.buildEstimate(new Date(last.timestamp + last.estimatedDuration));
-        }
-      }
-    }
-    if (data.lastCompletedBuild) {
-      self.status(data.lastCompletedBuild.result);
-    }
+    self.isBuilding(last.building);
+    self.buildStarted(new Date(last.timestamp));
+    self.buildEstimate(new Date(last.timestamp + last.estimatedDuration));
+    self.status(data.lastCompletedBuild.result);
     console.log("Check " + self.name() + " again in " + self.pollingFrequency + " seconds");
   };
 
